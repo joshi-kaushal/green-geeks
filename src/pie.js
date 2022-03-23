@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import * as d3 from "d3";
-
+//https://stackoverflow.com/questions/30687703/d3-js-pie-chart-with-label
 export default function PieChart(props) {
-  const { data, outerRadius = 400, innerRadius = 2 } = props;
+  const { data, outerRadius = 700, innerRadius = 0 } = props;
 
   const margin = {
     top: 50,
     right: 50,
     bottom: 50,
-    left: 50
+    left: 50,
   };
 
   const width = 2 * outerRadius + margin.left + margin.right;
@@ -16,9 +16,8 @@ export default function PieChart(props) {
 
   const colorScale = d3
     .scaleSequential()
-    .interpolator(d3.interpolateWarm)
+    .interpolator(d3.interpolateRgb("#00FF00", "#0000EB"))
     .domain([0, data.length]);
-
   useEffect(() => {
     drawChart();
   }, [data]);
@@ -56,6 +55,11 @@ export default function PieChart(props) {
       .style("stroke", "#ffffff")
       .style("stroke-width", 0);
 
+    // Get the Angle on the arc and then rotate by -90degrees
+    const getAngle = (d) => {
+      return ((180 / Math.PI) * (d.startAngle + d.endAngle)) / 2 - 90;
+    };
+
     // Append text labels
     arc
       .append("text")
@@ -64,7 +68,7 @@ export default function PieChart(props) {
       .text((d) => d.data.label)
       .attr("transform", (d) => {
         const [x, y] = arcGenerator.centroid(d);
-        return `translate(${x}, ${y})`;
+        return `translate(${x}, ${y}) rotate(${getAngle(d)})`;
       });
   }
 
