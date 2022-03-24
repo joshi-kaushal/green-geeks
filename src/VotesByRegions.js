@@ -54,12 +54,11 @@ export default function VotesByRegions(props) {
       // converts the base64 encoded blob into plain string
       // then JSON.parse() it to get the array of objects
       try {
-        var decodedData = atob(fileBlob);
-        // let base64ToString = Buffer.from(fileBlob, "base64").toString();
-        // base64ToString = JSON.parse(base64ToString);
-        console.log(decodedData);
+        // atob() is not working
+        let base64ToString = Buffer.from(fileBlob, "base64").toString();
+        base64ToString = JSON.parse(base64ToString);
 
-        createPieData(decodedData);
+        createPieData(base64ToString);
       } catch (error) {
         console.log(error);
       }
