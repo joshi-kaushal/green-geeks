@@ -31,3 +31,14 @@
 
       // console.log(JSON.parse(decodedBlob));
       // createPieData(JSON.parse(decodedBlob));
+
+const decodeUnicode = useCallback((str) => {
+const fr = new FileReader();
+
+    fr.onload = (e) => {
+      console.log(JSON.parse(e.target.result));
+    };
+
+    return fr.readAsText(str);
+
+}, []);
