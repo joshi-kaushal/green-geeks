@@ -14,6 +14,19 @@ export default function VotesByRegions(props) {
     getFileBlob();
   }, [getFileBlob]);
 
+  function base64EncodeUnicode(str) {
+    // Firstly, escape the string using encodeURIComponent to get the UTF-8 encoding of the characters,
+    // Secondly, we convert the percent encodings into raw bytes, and add it to btoa() function.
+    utf8Bytes = encodeURIComponent(str).replace(
+      /%([0-9A-F]{2})/g,
+      function (match, p1) {
+        return String.fromCharCode("0x" + p1);
+      }
+    );
+
+    return btoa(utf8Bytes);
+  }
+
   const getFileSHA = useCallback(async () => {
     try {
       const response = await fetch(
@@ -34,18 +47,19 @@ export default function VotesByRegions(props) {
         `https://api.github.com/repos/hackernoon/where-startups-trend/git/blobs/${fileSHA}`
       );
       const data = await response.json();
-      console.log(data.sha);
 
       setFileBlob(data.content);
+      console.log(data.content);
 
       // converts the base64 encoded blob into plain string
       // then JSON.parse() it to get the array of objects
       try {
-        let base64ToString = Buffer.from(fileBlob, "base64").toString();
-        base64ToString = JSON.parse(base64ToString);
-        console.log(base64ToString);
+        var decodedData = atob(fileBlob);
+        // let base64ToString = Buffer.from(fileBlob, "base64").toString();
+        // base64ToString = JSON.parse(base64ToString);
+        console.log(decodedData);
 
-        createPieData(base64ToString);
+        createPieData(decodedData);
       } catch (error) {
         console.log(error);
       }
@@ -58,12 +72,12 @@ export default function VotesByRegions(props) {
     regions.votesByRegion.forEach((region) => {
       const { region: label, votes: value } = region;
 
+      console.log(region);
       // creates a new object with just label and value
       const data = {
         label,
         value,
       };
-
       setRefinedData((refinedData) => [...refinedData, data]);
     });
   }
@@ -71,10 +85,11 @@ export default function VotesByRegions(props) {
   useEffect(() => {
     getFileBlob();
   }, []);
+
   return (
     <>
-      <h2>VotesByRegions</h2>
-      <PieChart data={refinedData} />
+      <h2>Votes by Regions</h2>
+      {refinedData && <PieChart data={refinedData} />}
     </>
   );
 }
