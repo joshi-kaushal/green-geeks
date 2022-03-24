@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import * as d3 from "d3";
 //https://stackoverflow.com/questions/30687703/d3-js-pie-chart-with-label
+
+// d3.legends.js
+// http://bl.ocks.org/ZJONSSON/3918369
+
 export default function PieChart(props) {
   const { data, outerRadius = 700, innerRadius = 0 } = props;
 

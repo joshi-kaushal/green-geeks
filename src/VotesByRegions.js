@@ -43,15 +43,12 @@ function VotesByRegions(props) {
       const data = await response.json();
 
       setFileBlob(data.content);
-      console.log(fileBlob);
-      console.log("getFileBlob called");
 
       // converts the base64 encoded blob into plain string
       // then JSON.parse() it to get the array of objects
       try {
         // atob() is not working
         let base64ToString = Buffer.from(fileBlob, "base64").toString();
-        console.log(base64ToString);
         base64ToString = JSON.parse(base64ToString);
         createPieData(base64ToString);
       } catch (error) {
@@ -66,7 +63,6 @@ function VotesByRegions(props) {
     regions.votesByRegion.forEach((region) => {
       const { region: label, votes: value } = region;
 
-      console.log(region);
       // creates a new object with just label and value
       const data = {
         label,
@@ -84,7 +80,7 @@ function VotesByRegions(props) {
 
   return (
     <>
-      <h2>Votes by Regions</h2>
+      <h1>Votes by Regions</h1>
       {refinedData && <PieChart data={refinedData} />}
     </>
   );
