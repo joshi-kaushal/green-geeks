@@ -17,3 +17,17 @@
 // reader.readAsArrayBuffer(blob);
 
 //a51a49dfc2bd7be262bd59bb85e85271ea0c18cd
+
+      // setDecodedBlob(decodeUnicode(fileBlob));
+      // setDecodedBlob(atob(fileBlob));
+      // console.log(fileBlob);
+      // console.log(decodedBlob);
+      // createPieData(JSON.parse(decodedBlob));
+      // const base64Data = decodeUnicode(fileBlob);
+      // setRefinedData(base64Data);
+
+      // let base64ToString = Buffer.from(fileBlob, "base64").toString();
+      // base64ToString = JSON.parse(base64ToString);
+
+      // console.log(JSON.parse(decodedBlob));
+      // createPieData(JSON.parse(decodedBlob));

@@ -8,26 +8,25 @@ export default function VotesByRegions(props) {
   const [fileBlob, setFileBlob] = useState(null);
   const [decodedBlob, setDecodedBlob] = useState(null);
 
-  // const decodeUnicode = useCallback((str) => {
-  //   // Going backwards: from bytestream, to percent-encoding, to original string.
-  //   return decodeURIComponent(
-  //     atob(str)
-  //       .split("")
-  //       .map(function (c) {
-  //         return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-  //       })
-  //       .join("")
-  //   );
-  // }, []);
+  const decodeUnicode = useCallback((str) => {
+    const fr = new FileReader();
+
+    fr.onload = (e) => {
+      console.log(JSON.parse(e.target.result));
+    };
+
+    return fr.readAsText(str);
+  }, []);
 
   const getFileSHA = useCallback(async () => {
     try {
-      const response = await fetch(
-        "https://api.github.com/repos/hackernoon/where-startups-trend/contents/2021/"
-      );
-      const data = await response.json();
-      console.log(data);
-      setFileSHA(data[3].sha);
+      // const response = await fetch(
+      //   "https://api.github.com/repos/hackernoon/where-startups-trend/contents/2021/"
+      // );
+      // const data = await response.json();
+      // setFileSHA(data[3].sha);
+      setFileSHA("9705d417f8d433796b7e51f1239a620030060cbf");
+      // console.log(fileSHA);
 
       fileSHA && getFileBlob();
     } catch (error) {
@@ -42,15 +41,22 @@ export default function VotesByRegions(props) {
   const getFileBlob = useCallback(async () => {
     try {
       const response = await fetch(
-        `https://api.github.com/repos/hackernoon/where-startups-trend/git/blobs/${fileSHA}`
+        `https://api.github.com/repos/hackernoon/where-startups-trend/git/blobs/9705d417f8d433796b7e51f1239a620030060cbf`
       );
       const data = await response.json();
+      console.log(data.sha);
+
       setFileBlob(data.content);
-      setDecodedBlob(atob(fileBlob));
-      console.log(decodedBlob);
-      createPieData(decodedBlob);
-      // const base64Data = decodeUnicode(fileBlob);
-      // setRefinedData(base64Data);
+      console.log(fileBlob);
+
+      try {
+        let base64ToString = Buffer.from(fileBlob, "base64").toString();
+        base64ToString = JSON.parse(base64ToString);
+        console.log(base64ToString);
+        createPieData(base64ToString);
+      } catch (error) {
+        console.log(error);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -72,11 +78,14 @@ export default function VotesByRegions(props) {
   }
 
   useEffect(() => {
-    createPieData();
+    getFileBlob();
   }, []);
   return (
     <>
       <h2>VotesByRegions</h2>
+      {/* <p>File SHA: {fileSHA}</p>
+      <p>File Blob: {fileBlob}</p>
+      <p>Decoded Blob: {typeof decodedBlob}</p> */}
       <PieChart data={refinedData} />
     </>
   );
