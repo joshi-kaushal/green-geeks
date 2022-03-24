@@ -1,18 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo, useMemo } from "react";
 import PieChart from "./pie";
 
-export default function VotesByRegions(props) {
+function VotesByRegions(props) {
   const [refinedData, setRefinedData] = useState([]);
   const [fileSHA, setFileSHA] = useState(
     "9705d417f8d433796b7e51f1239a620030060cbf"
   );
-  const [fileBlob, setFileBlob] = useState(null);
-
-  useEffect(() => {
-    // getFileSHA();
-    // I already have the file SHA, many API requests may lead to blocking
-    getFileBlob();
-  }, [getFileBlob]);
+  const [fileBlob, setFileBlob] = useState("");
 
   function base64EncodeUnicode(str) {
     // Firstly, escape the string using encodeURIComponent to get the UTF-8 encoding of the characters,
@@ -49,15 +43,16 @@ export default function VotesByRegions(props) {
       const data = await response.json();
 
       setFileBlob(data.content);
-      console.log(data.content);
+      console.log(fileBlob);
+      console.log("getFileBlob called");
 
       // converts the base64 encoded blob into plain string
       // then JSON.parse() it to get the array of objects
       try {
         // atob() is not working
         let base64ToString = Buffer.from(fileBlob, "base64").toString();
+        console.log(base64ToString);
         base64ToString = JSON.parse(base64ToString);
-
         createPieData(base64ToString);
       } catch (error) {
         console.log(error);
@@ -65,9 +60,9 @@ export default function VotesByRegions(props) {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [fileBlob]);
 
-  function createPieData(regions) {
+  const createPieData = (regions) => {
     regions.votesByRegion.forEach((region) => {
       const { region: label, votes: value } = region;
 
@@ -79,11 +74,13 @@ export default function VotesByRegions(props) {
       };
       setRefinedData((refinedData) => [...refinedData, data]);
     });
-  }
+  };
 
   useEffect(() => {
+    // getFileSHA();
+    // I already have the file SHA, many API requests may lead to blocking
     getFileBlob();
-  }, []);
+  }, [getFileBlob]);
 
   return (
     <>
@@ -92,3 +89,5 @@ export default function VotesByRegions(props) {
     </>
   );
 }
+
+export default memo(VotesByRegions);
