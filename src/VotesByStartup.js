@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import PieChart from "./pie";
+import PieChart from "./PieChart";
 
 export default function VotesByStartup(props) {
   const [refinedData, setRefinedData] = useState([]);

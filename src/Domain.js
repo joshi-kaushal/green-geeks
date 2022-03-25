@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import * as d3 from "d3";
-import { domains } from "./domains";
+import { domains } from "./data/domains";
 
 export default function Domains() {
   const [data, setData] = useState(domains);

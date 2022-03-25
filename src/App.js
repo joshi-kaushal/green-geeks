@@ -1,4 +1,3 @@
-import Choropleth from "./Choropleth";
 import Domains from "./Domain";
 import "./styles.css";
 import VotesByRegions from "./VotesByRegions";
