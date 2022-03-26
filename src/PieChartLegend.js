@@ -46,7 +46,6 @@ const PieChartLegend = ({ data, keys }) => {
         .value((d) => d[1]);
 
       const ready_data = pie(Object.entries(refinedData));
-      console.log(refinedData);
       // The arc generator
       const arc = d3
         .arc()

@@ -8,7 +8,6 @@ function VotesByRegions(props) {
     "9705d417f8d433796b7e51f1239a620030060cbf"
   );
   const [fileBlob, setFileBlob] = useState("");
-  const [keys, setKeys] = useState([]);
 
   // function base64EncodeUnicode(str) {
   //   // Firstly, escape the string using encodeURIComponent to get the UTF-8 encoding of the characters,
@@ -43,6 +42,7 @@ function VotesByRegions(props) {
         `https://api.github.com/repos/hackernoon/where-startups-trend/git/blobs/${fileSHA}`
       );
       const data = await response.json();
+      console.log(data);
       setFileBlob(data.content);
 
       // converts the base64 encoded blob into plain string
@@ -71,13 +71,6 @@ function VotesByRegions(props) {
       };
       setRefinedData((refinedData) => [...refinedData, data]);
     });
-
-    generateKeys();
-  };
-
-  const generateKeys = () => {
-    const generatedKeys = refinedData.map((data) => data.label);
-    setKeys([...keys, generatedKeys]);
   };
 
   useEffect(() => {
@@ -90,7 +83,7 @@ function VotesByRegions(props) {
     <>
       <h1>Votes by Regions</h1>
       {/* {refinedData && <PieChart data={refinedData} />} */}
-      {refinedData && <PieChartLegend data={refinedData} keys={keys} />}
+      {refinedData && <PieChartLegend data={refinedData} />}
     </>
   );
 }
